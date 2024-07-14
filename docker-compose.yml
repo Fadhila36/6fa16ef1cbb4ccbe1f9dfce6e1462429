@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASS=your-db-password
+      - DB_NAME=your-db-name
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_PORT=587
+      - SMTP_USER=your-email@gmail.com
+      - SMTP_PASS=your-email-password
+      - OAUTH2_CLIENT_ID=your-client-id
+      - OAUTH2_CLIENT_SECRET=your-client-secret
+      - OAUTH2_REDIRECT_URI=http://localhost:8000/auth/callback
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: your-db-name
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: your-db-password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+volumes:
+  pg_data:
